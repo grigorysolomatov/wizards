@@ -37,7 +37,7 @@ const states = {
     spawn: async ctx => {
 	const {verbs, count=0} = ctx;
 
-	if (count >= 6) {
+	if (count >= 4) {
 	    delete ctx.count;
 	    const [nrows, ncols] = verbs.board.dims();
 	    verbs.board
