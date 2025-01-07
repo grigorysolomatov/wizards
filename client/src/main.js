@@ -6,7 +6,7 @@ import { menu } from './menu.js';
 const steps = {
     setup: async ctx => {
 	let [width, height] = [window.innerWidth, window.innerHeight];
-	if (true || width > height) { width = height/1.6; }
+	if (true || width > height) { width = height/1.4; }
 
 	const config = {
 	    width, height,
@@ -35,7 +35,7 @@ const steps = {
 	const background = engine.sprite(0.5*width, 0.5*height, 'background');
 	background
 	    .setDisplaySize(width, background.height*width/background.width)
-	    .setTint(0x333333)
+	    .setTint(0x444444)
 	    .tween({alpha: {from: 0, to: 1}});
 
 	Object.assign(ctx, {engine, width, height});

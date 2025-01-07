@@ -1,6 +1,6 @@
 import { Context } from './tools/context.js';
 import { mspace } from './tools/mspace.js';
-import { units } from './units.js';
+import { subgame } from './subgame.js';
 
 const states = {
     verbs: async ctx => {
@@ -104,7 +104,7 @@ const states = {
 		turn: () => meta.turn,
 	    },
 	    player: {
-		choice: async ({mark, enable, options}) => {
+		choice: async ({mark={pos: []}, enable={}, options={}}) => {
 		    const filter = mspace()
 			  .funcs({
 			      pos: p => p,
@@ -130,7 +130,7 @@ const states = {
 	};
 
 	Object.assign(ctx, {verbs});
-	await units(verbs);
+	await subgame(verbs);
     },
 };
-export const game = async external => await new Context({external}).stateMachine(states);
+export const game = async external => await new Context({external}).onto(...Object.values(states));

@@ -9,6 +9,7 @@ const steps = {
 	ctx.funcs = dict => ff.remove(...ff.keys()).assign(dict).into(_ => ctx);
 	ctx.dists = dict => dd.remove(...ff.keys()).assign(dict).into(_ => ctx);
 	ctx.mark = dict => mm.remove(...mm.keys()).assign(dict).into(_ => ctx);
+	// Enable by dists from marked --------------------------------------
 	ctx.raw = dict => x => mm
 	    .map((yy, k) => Math.min(...yy.map(y => dd[k](y, ff[k](x)))))
 	    .map((d, k) => dict[k]?.(d))
