@@ -243,7 +243,7 @@ const states = {
 	
 	const choice = await verbs.player.choice({
 	    mark: {pos: [p0], units: [undefined]},
-	    enable: {pos: d => d > 0, units: d => d > 0},
+	    enable: {pos: d => d <= 2, units: d => d > 0},
 	    options: {cancel: 'cancel'},
 	});
 
