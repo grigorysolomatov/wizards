@@ -10,7 +10,7 @@ const units = {
 		const p0 = verbs.meta.selected();
 		const choice = await verbs.player.choice({
 		    mark: {pos: [p0], units: [undefined], tiles: [undefined]},
-		    enable: {pos: d => d <= 999, units: d => d === 0, tiles: d => d > 0},
+		    enable: {pos: d => d > 0, units: d => d === 0, tiles: d => d > 0},
 		    options: {cancel: 'cancel'},
 		});
 
@@ -96,6 +96,7 @@ const states = {
 	    'spawn-rogue': 'rogue-spawn',
 	    'spawn-hooker': 'hooker-spawn',
 	    'spawn-shooter': 'shooter-spawn',
+	    'spawn-wizard': 'wizard-spawn',
 	};
 	const counts = new Context(options)
 	      .map(val => val.replace('spawn', ['red', 'blue'][verbs.meta.turn()]))
@@ -111,6 +112,7 @@ const states = {
 	rogue: {push: 'push', jump: 'jump', pass: 'pass'},
 	hooker: {pull: 'pull', jump: 'jump', pass: 'pass'},
 	shooter: {destroy: 'destroy', jump: 'jump', shoot: 'shoot', pass: 'pass'},
+	wizard: {destroy: 'destroy', move: 'move', swap: 'swap', jump: 'jump', pass: 'pass'},
     }),
     // -------------------------------------------------------------------------
     spawn: async ctx => {
@@ -231,6 +233,29 @@ const states = {
 
 	await verbs.board.cjump('units', p0, p0);
 	await verbs.board.cjump('units', p1, p3);
+	
+	return 'pass';
+    },
+    swap: async ctx => {
+	const {verbs, unit} = ctx;
+
+	const p0 = verbs.meta.selected();
+	
+	const choice = await verbs.player.choice({
+	    mark: {pos: [p0], units: [undefined]},
+	    enable: {pos: d => d > 0, units: d => d > 0},
+	    options: {cancel: 'cancel'},
+	});
+
+	if (choice === 'cancel') { return unit; }
+
+	const p1 = choice;
+
+	const u0 = verbs.board.get('units', ...p0);
+	const u1 = verbs.board.get('units', ...p1);
+	
+	verbs.board.replace('units', ...p0, u1);
+	await verbs.board.replace('units', ...p1, u0);
 	
 	return 'pass';
     },
