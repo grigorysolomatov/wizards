@@ -97,6 +97,7 @@ const states = {
 	    'spawn-hooker': 'hooker-spawn',
 	    'spawn-shooter': 'shooter-spawn',
 	    'spawn-wizard': 'wizard-spawn',
+	    'spawn-wrestler': 'wrestler-spawn',
 	};
 	const counts = new Context(options)
 	      .map(val => val.replace('spawn', ['red', 'blue'][verbs.meta.turn()]))
@@ -112,6 +113,7 @@ const states = {
 	rogue: {push: 'push', jump: 'jump', pass: 'pass'},
 	hooker: {pull: 'pull', jump: 'jump', pass: 'pass'},
 	shooter: {destroy: 'destroy', jump: 'jump', shoot: 'shoot', pass: 'pass'},
+	wrestler: {throw: 'throw', jump: 'jump', pass: 'pass'},
 	wizard: {destroy: 'destroy', move: 'move', swap: 'swap', jump: 'jump', pass: 'pass'},
     }),
     // -------------------------------------------------------------------------
@@ -161,7 +163,7 @@ const states = {
 	const {verbs} = ctx;
 
 	const color = ['red', 'blue'][verbs.meta.turn()];
-	const units = ['wizard', 'rogue', 'hooker', 'book', 'shooter']
+	const units = ['wizard', 'rogue', 'hooker', 'book', 'shooter', 'wrestler']
 	      .map(unit => `${unit}-${color}`);
 	const [row, col] = await verbs.player.choice({
 	    mark: {units},
@@ -229,6 +231,29 @@ const states = {
 	const p1 = choice;
 	const d = [p1[0] - p0[0], p1[1] - p0[1]];
 	const p2 = [p1[0] + d[0], p1[1] + d[1]];
+	const p3 = verbs.board.get('units', ...p2) ? p1 : p2;
+
+	await verbs.board.cjump('units', p0, p0);
+	await verbs.board.cjump('units', p1, p3);
+	
+	return 'pass';
+    },
+    throw: async ctx => {
+	const {verbs, unit} = ctx;
+
+	const p0 = verbs.meta.selected();
+	
+	const choice = await verbs.player.choice({
+	    mark: {pos: [p0], units: [undefined]},
+	    enable: {pos: d => d === 1, units: d => d > 0},
+	    options: {cancel: 'cancel'},
+	});
+
+	if (choice === 'cancel') { return unit; }
+
+	const p1 = choice;
+	const d = [p0[0] - p1[0], p0[1] - p1[1]];
+	const p2 = [p0[0] + d[0], p0[1] + d[1]];
 	const p3 = verbs.board.get('units', ...p2) ? p1 : p2;
 
 	await verbs.board.cjump('units', p0, p0);

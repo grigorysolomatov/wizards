@@ -10,6 +10,7 @@ export const assets = {
     'move': 'assets/exported/move.png',
     'swap': 'assets/exported/swap.png',
     'push': 'assets/exported/push.png',
+    'throw': 'assets/exported/throw.png',
     'pull': 'assets/exported/pull.png',
     'shoot': 'assets/exported/shoot.png',
     'statue': 'assets/exported/statue.png',
@@ -31,5 +32,8 @@ export const assets = {
     'shooter-blue': 'assets/exported/shooter-blue.png',
     'wizard-spawn': 'assets/exported/wizard-spawn.png',
     'wizard-red': 'assets/exported/wizard-red.png',
-    'wizard-blue': 'assets/exported/wizard-blue.png',    
+    'wizard-blue': 'assets/exported/wizard-blue.png',
+    'wrestler-spawn': 'assets/exported/wrestler-spawn.png',
+    'wrestler-red': 'assets/exported/wrestler-red.png',
+    'wrestler-blue': 'assets/exported/wrestler-blue.png',
 };
