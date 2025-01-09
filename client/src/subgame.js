@@ -114,7 +114,7 @@ const states = {
 	hooker: {pull: 'pull', jump: 'jump', pass: 'pass'},
 	shooter: {destroy: 'destroy', jump: 'jump', shoot: 'shoot', pass: 'pass'},
 	wrestler: {throw: 'throw', jump: 'jump', pass: 'pass'},
-	wizard: {glass: 'tile-glass', swap: 'swap', jump: 'jump', pass: 'pass'},
+	wizard: {glass: 'tile-glass', swap: 'swap', move: 'move', jump: 'jump', pass: 'pass'},
     }),
     // -------------------------------------------------------------------------
     spawn: async ctx => {
