@@ -57,12 +57,10 @@ const states = {
 		get: (layer, row, col) => board[layer][JSON.stringify([row, col])],
 		crack: async () => {
 		    await board.units
-			.map(async (_, pos) => {
-			    const [row, col] = JSON.parse(pos);
-			    if (verbs.board.get('tiles', row, col) !== 'tile') { return; }
-			    if (verbs.board.get('units', row, col) === undefined) { return; }
-			    await verbs.board.replace('tiles', row, col, 'tile-crack');
-			})
+			.filter(u => u)
+			.map((_, p) => JSON.parse(p))
+			.filter(p => verbs.board.get('tiles', ...p) === 'tile')
+			.map(async p => await verbs.board.replace('tiles', ...p, 'tile-crack'))
 			.into(ctx => Promise.all(ctx.values()));
 		},
 		fall: async () => {

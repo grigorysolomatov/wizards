@@ -3,6 +3,8 @@ export const assets = {
     'select': 'assets/exported/select.png',
     'tile': 'assets/exported/tile.png',
     'tile-crack': 'assets/exported/tile-crack.png',
+    'tile-glass': 'assets/exported/tile-glass.png',
+    'tile-glass-stable': 'assets/exported/tile-glass-stable.png',
     'cancel': 'assets/exported/cancel.png',
     'pass': 'assets/exported/pass.png',
     'destroy': 'assets/exported/destroy.png',

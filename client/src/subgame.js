@@ -76,7 +76,7 @@ const states = {
     },
     physics: async ctx => {
 	const {verbs} = ctx;
-	
+		
 	const fallen = await verbs.board.fall();
 	
 	const end = fallen.values().some(u => u.includes('red') || u.includes('blue'));
@@ -96,8 +96,8 @@ const states = {
 	    'spawn-rogue': 'rogue-spawn',
 	    'spawn-hooker': 'hooker-spawn',
 	    'spawn-shooter': 'shooter-spawn',
-	    'spawn-wizard': 'wizard-spawn',
 	    'spawn-wrestler': 'wrestler-spawn',
+	    'spawn-wizard': 'wizard-spawn',
 	};
 	const counts = new Context(options)
 	      .map(val => val.replace('spawn', ['red', 'blue'][verbs.meta.turn()]))
@@ -114,7 +114,7 @@ const states = {
 	hooker: {pull: 'pull', jump: 'jump', pass: 'pass'},
 	shooter: {destroy: 'destroy', jump: 'jump', shoot: 'shoot', pass: 'pass'},
 	wrestler: {throw: 'throw', jump: 'jump', pass: 'pass'},
-	wizard: {destroy: 'destroy', move: 'move', swap: 'swap', jump: 'jump', pass: 'pass'},
+	wizard: {glass: 'tile-glass', swap: 'swap', jump: 'jump', pass: 'pass'},
     }),
     // -------------------------------------------------------------------------
     spawn: async ctx => {
@@ -154,7 +154,17 @@ const states = {
     pass: async ctx => {
 	const {verbs, unit} = ctx;
 	
-	verbs.board.crack();
+	verbs.board.crack(); // TODO?
+	verbs.board
+	    .find('tiles', t => t === 'tile-glass')
+	    .map((_, p) => JSON.parse(p))
+	    .map(p => verbs.board.replace('tiles', ...p));
+
+	verbs.board
+	    .find('tiles', t => t === 'tile-glass-stable')
+	    .map((_, p) => JSON.parse(p))
+	    .map(p => verbs.board.replace('tiles', ...p, 'tile-glass'));
+	
 	verbs.meta.pass();
 	
 	return verbs.state.queue('physics', 'select');
@@ -396,6 +406,24 @@ const states = {
 	const p2 = choice1;
 	verbs.board.swap('units', p1, p2);
 	await verbs.board.swap('tiles', p1, p2);
+	
+	return 'pass';
+    },
+    glass: async ctx => {
+	const {verbs, unit} = ctx;
+
+	const p0 = verbs.meta.selected();
+	const choice = await verbs.player.choice({
+	    mark: {pos: [p0], tiles: [undefined]},
+	    enable: {pos: d => d <= 2, tiles: d => d > 0},
+	    options: {cancel: 'cancel'},
+	});
+
+	if (choice === 'cancel') { return unit; }
+
+	const p1 = choice;
+
+	verbs.board.replace('tiles', ...p1, 'tile-glass-stable');
 	
 	return 'pass';
     },
